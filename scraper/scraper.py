@@ -24,6 +24,10 @@ class DouScraper:
         response = self.session.post(BASE_URL + "xhr-load/" + CATEGORY, data=data, headers=self.headers)
         return response.json()
 
+    def scrape_vacancies(self) -> dict:
+        self._get_csrf_token()
+        return self._fetch_vacancies_page(0)
+
     def _get_vacancy_urls(self, html):
         soup = BeautifulSoup(html, "html.parser")
         vacancy_url = soup.find_all("a", {"class": "vt"})
@@ -35,8 +39,29 @@ class DouScraper:
         soup = BeautifulSoup(response.text, "html.parser")
         description = soup.find("div", {"class": "vacancy-section"})
 
-        return description.text
+        return description.get_text(separator=" ", strip=True).replace("\xa0", " ")
 
-    def scrape_vacancies(self) -> dict:
+    def scrape_all(self):
         self._get_csrf_token()
-        return self._fetch_vacancies_page(0)
+        count = 0
+        descriptions = []
+        while True:
+            page = self._fetch_vacancies_page(count)
+            vacancy_urls = self._get_vacancy_urls(page["html"])
+            for url in vacancy_urls:
+                description = self._get_vacancy_description(url)
+                descriptions.append(description)
+            if page["last"]:
+                break
+            count += 40
+        return descriptions
+
+
+if __name__ == "__main__":
+    scraper = DouScraper()
+    scraper._get_csrf_token()
+    all = scraper.scrape_all()
+    # page = scraper._fetch_vacancies_page(0)
+    # descriptions = scraper._get_vacancy_description("https://jobs.dou.ua/companies/precoro/vacancies/362981/")
+    # urls = scraper._get_vacancy_urls(page["html"])
+    print(all)
