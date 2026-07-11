@@ -1,7 +1,10 @@
+import json
+from datetime import datetime
+
 import requests
 from bs4 import BeautifulSoup
 
-from config import BASE_URL, CATEGORY
+from config import BASE_URL, CATEGORY, RAW_DATA_DIR
 
 
 class DouScraper:
@@ -54,14 +57,10 @@ class DouScraper:
             if page["last"]:
                 break
             count += 40
+
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        filename = f"{RAW_DATA_DIR}{current_date}_all.json"
+        with open(filename, "w", encoding="utf-8") as file:
+            json.dump(descriptions, file, ensure_ascii=False, indent=4)
+
         return descriptions
-
-
-if __name__ == "__main__":
-    scraper = DouScraper()
-    scraper._get_csrf_token()
-    all = scraper.scrape_all()
-    # page = scraper._fetch_vacancies_page(0)
-    # descriptions = scraper._get_vacancy_description("https://jobs.dou.ua/companies/precoro/vacancies/362981/")
-    # urls = scraper._get_vacancy_urls(page["html"])
-    print(all)
