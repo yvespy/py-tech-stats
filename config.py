@@ -8,7 +8,7 @@ EXPERIENCE_LEVEL = {
     "senior+": "5plus"
 }
 
-CATEGORY = "Python"
+CATEGORY = "?category=Python"
 
 RAW_DATA_DIR = "data/raw/"
 CHARTS_DIR = "data/charts/"
