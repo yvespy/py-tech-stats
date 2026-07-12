@@ -31,32 +31,34 @@ class DouScraper:
         self._get_csrf_token()
         return self._fetch_vacancies_page(0)
 
-    def _get_vacancy_urls(self, html):
+    def _get_vacancy_urls(self, html) -> list:
         soup = BeautifulSoup(html, "html.parser")
         vacancy_url = soup.find_all("a", {"class": "vt"})
 
         return [link["href"] for link in vacancy_url]
 
-    def _get_vacancy_description(self, url):
+    def _get_vacancy_description(self, url) -> str:
         response = self.session.get(url, headers=self.headers)
         soup = BeautifulSoup(response.text, "html.parser")
         description = soup.find("div", {"class": "vacancy-section"})
 
         return description.get_text(separator=" ", strip=True).replace("\xa0", " ")
 
-    def scrape_all(self):
+    def scrape_all(self) -> list[str]:
         self._get_csrf_token()
-        count = 0
+
+        offset = 0
         descriptions = []
-        while True:
-            page = self._fetch_vacancies_page(count)
-            vacancy_urls = self._get_vacancy_urls(page["html"])
-            for url in vacancy_urls:
-                description = self._get_vacancy_description(url)
-                descriptions.append(description)
-            if page["last"]:
-                break
-            count += 40
+        last_page = False
+
+        while not last_page:
+            page = self._fetch_vacancies_page(offset)
+
+            for url in self._get_vacancy_urls(page["html"]):
+                descriptions.append(self._get_vacancy_description(url))
+
+            last_page = page["last"]
+            offset += 40
 
         current_date = datetime.now().strftime("%Y-%m-%d")
         filename = f"{RAW_DATA_DIR}{current_date}_all.json"
