@@ -24,7 +24,7 @@ class TechAnalyzer:
         )
         return tokens
 
-    def get_top_technologies(self, n=30):
+    def get_top_technologies(self, n=20):
         words = self._process_text()
 
         counter = Counter()

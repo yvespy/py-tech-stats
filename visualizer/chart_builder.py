@@ -1,9 +1,7 @@
 from matplotlib import pyplot as plt
 
-from config import CHARTS_DIR
 
-
-def build_chart(data: list[tuple], filename) -> None:
+def build_chart(data: list[tuple], output_path: str) -> None:
     name, count = zip(*data)
     fig, ax = plt.subplots(figsize=(10, 6))
     bars = ax.bar(name, count, color='skyblue', edgecolor='black', width=0.6)
@@ -17,5 +15,7 @@ def build_chart(data: list[tuple], filename) -> None:
     ax.set_axisbelow(True)
     ax.grid(axis='y', linestyle='--', alpha=0.7)
 
-    plt.savefig(f"{CHARTS_DIR}{filename}", dpi=300, bbox_inches='tight')
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
     plt.close()
+
+    return None

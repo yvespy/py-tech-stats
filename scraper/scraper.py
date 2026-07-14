@@ -1,10 +1,9 @@
 import json
-from datetime import datetime
 
 import requests
 from bs4 import BeautifulSoup
 
-from config import BASE_URL, CATEGORY, RAW_DATA_DIR
+from config import BASE_URL, CATEGORY
 
 
 class DouScraper:
@@ -44,7 +43,7 @@ class DouScraper:
 
         return description.get_text(separator=" ", strip=True).replace("\xa0", " ")
 
-    def scrape_all(self) -> list[str]:
+    def scrape_all(self, output_path: str) -> None:
         self._get_csrf_token()
 
         offset = 0
@@ -60,9 +59,7 @@ class DouScraper:
             last_page = page["last"]
             offset += 40
 
-        current_date = datetime.now().strftime("%Y-%m-%d")
-        filename = f"{RAW_DATA_DIR}{current_date}_all.json"
-        with open(filename, "w", encoding="utf-8") as file:
+        with open(output_path, "w", encoding="utf-8") as file:
             json.dump(descriptions, file, ensure_ascii=False, indent=4)
 
-        return descriptions
+        return None
