@@ -18,12 +18,15 @@ class DouScraper:
         self.session.get(BASE_URL, headers=self.headers)
         self.csrf_token = self.session.cookies.get("csrftoken")
 
-    def _fetch_vacancies_page(self, count) -> dict:
+    def _fetch_vacancies_page(self, count, exp: str = "") -> dict:
         data = {
             "csrfmiddlewaretoken": self.csrf_token,
             "count": count
         }
-        response = self.session.post(BASE_URL + "xhr-load/" + CATEGORY, data=data, headers=self.headers)
+        url = BASE_URL + "xhr-load/" + CATEGORY
+        if exp:
+            url += f"&exp={exp}"
+        response = self.session.post(url, data=data, headers=self.headers)
         return response.json()
 
     def scrape_vacancies(self) -> dict:
@@ -43,7 +46,7 @@ class DouScraper:
 
         return description.get_text(separator=" ", strip=True).replace("\xa0", " ")
 
-    def scrape_all(self, output_path: str) -> None:
+    def scrape_all(self, output_path: str, exp: str = "") -> None:
         self._get_csrf_token()
 
         offset = 0
@@ -51,7 +54,7 @@ class DouScraper:
         last_page = False
 
         while not last_page:
-            page = self._fetch_vacancies_page(offset)
+            page = self._fetch_vacancies_page(offset, exp)
 
             for url in self._get_vacancy_urls(page["html"]):
                 descriptions.append(self._get_vacancy_description(url))

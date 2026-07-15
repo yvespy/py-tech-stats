@@ -1,17 +1,21 @@
+from config import EXPERIENCE_LEVEL
 from scraper.scraper import DouScraper
 from analyzer.analyzer import TechAnalyzer
 from utils.file_utils import OutputFiles
 from visualizer.chart_builder import build_chart
 
-files = OutputFiles("all")
+if __name__ == "__main__":
+    scraper = DouScraper()
 
-# Scrape and save to JSON
-scraper = DouScraper()
-scraper.scrape_all(files.json_path)
+    for level, exp in EXPERIENCE_LEVEL.items():
+        files = OutputFiles(level)
 
-# Reading JSON and parsing
-analyzer = TechAnalyzer(files.json_path)
-data = analyzer.get_top_technologies()
+        # Scrape and save to JSON
+        scraper.scrape_all(files.json_path, exp)
 
-# Build a chart
-build_chart(data, files.chart_path)
+        # Reading JSON and parsing
+        analyzer = TechAnalyzer(files.json_path)
+        data = analyzer.get_top_technologies()
+
+        # Build a chart
+        build_chart(data, files.chart_path)

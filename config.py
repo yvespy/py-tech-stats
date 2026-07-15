@@ -4,7 +4,8 @@ BASE_URL = "https://jobs.dou.ua/vacancies/"
 DATE_FORMAT = "%Y-%m-%d"
 
 EXPERIENCE_LEVEL = {
-    "junior/trainee": "0-1",
+    "all": "",
+    "junior": "0-1",
     "middle": "1-3",
     "senior": "3-5",
     "senior+": "5plus"
@@ -35,4 +36,5 @@ NON_TECH_WORDS = {
     "Professional", "Participate", "Integrate", "Contribute", "Actions", "Please",
     "Basic", "Understanding", "Competitive", "Growth", "Remote", "Full", "Europe",
     "Kyiv", "Ukraine", "Architect", "Manager", "Maintain", "Computer", "Science", "Automation",
+    "Handle", "Operate", "Supportive", 
 }
