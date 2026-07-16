@@ -36,5 +36,5 @@ NON_TECH_WORDS = {
     "Professional", "Participate", "Integrate", "Contribute", "Actions", "Please",
     "Basic", "Understanding", "Competitive", "Growth", "Remote", "Full", "Europe",
     "Kyiv", "Ukraine", "Architect", "Manager", "Maintain", "Computer", "Science", "Automation",
-    "Handle", "Operate", "Supportive", 
+    "Handle", "Operate", "Supportive", "Diagnose", "Debug", "Clear", "Intermediate", "Own", "Deep"
 }
